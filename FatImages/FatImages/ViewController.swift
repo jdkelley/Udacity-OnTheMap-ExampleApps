@@ -19,15 +19,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var photoView: UIImageView!
     
     @IBAction func synchronousDownload(sender: UIBarButtonItem) {
-        
-        let url = NSURL(string: BigImage.seaLion.rawValue)
-        
-        let imageData = NSData(contentsOfURL: url!)
-        
-        let image = UIImage(data: imageData!)
-        
-        photoView.image = image
-        
+        if let url = NSURL(string: BigImage.seaLion.rawValue), let imageData = NSData(contentsOfURL: url), let image = UIImage(data: imageData) {
+            photoView.image = image
+        }
     }
     
     @IBAction func simpleAsyncronousDownload(sender: UIBarButtonItem) {
