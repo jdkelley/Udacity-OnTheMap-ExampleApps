@@ -25,16 +25,38 @@ class ViewController: UIViewController {
     }
     
     @IBAction func simpleAsyncronousDownload(sender: UIBarButtonItem) {
-        //
+        let url = NSURL(string: BigImage.shark.rawValue)
+        let download = dispatch_queue_create("download", nil) // synchronous Queue
+        dispatch_async(download) { 
+            let imageData = NSData(contentsOfURL: url!)
+            let image = UIImage(data: imageData!)
+            
+            dispatch_async(dispatch_get_main_queue(), { 
+                self.photoView.image = image
+            })
+        }
     }
     
     @IBAction func asynchronousDownload(sender: UIBarButtonItem) {
-        // <#Code#>
+        withBigImage { (image) in
+            self.photoView.image = image
+        }
+    }
+    
+    func withBigImage(completionHandler handler: (image: UIImage) -> Void) {
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) { 
+            if let url = NSURL(string: BigImage.whale.rawValue),
+                let imageData = NSData(contentsOfURL: url),
+                let image = UIImage(data: imageData) {
+                dispatch_async(dispatch_get_main_queue()) {
+                    handler(image: image)
+                }
+            }
+        }
     }
     
     @IBAction func setTransparencyOfImage(sender: UISlider) {
         photoView.alpha = CGFloat(sender.value)
     }
-
 }
 
