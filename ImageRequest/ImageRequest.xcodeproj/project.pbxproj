@@ -14,6 +14,8 @@
 		96F4AD2E1D22D3B9004524EC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96F4AD2C1D22D3B9004524EC /* LaunchScreen.storyboard */; };
 		96F4AD391D22D3B9004524EC /* ImageRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F4AD381D22D3B9004524EC /* ImageRequestTests.swift */; };
 		96F4AD441D22D3B9004524EC /* ImageRequestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F4AD431D22D3B9004524EC /* ImageRequestUITests.swift */; };
+		96F4AD521D22D678004524EC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F4AD511D22D678004524EC /* Constants.swift */; };
+		96F4AD541D22D69A004524EC /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F4AD531D22D69A004524EC /* GCDBlackBox.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,8 @@
 		96F4AD3F1D22D3B9004524EC /* ImageRequestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageRequestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		96F4AD431D22D3B9004524EC /* ImageRequestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRequestUITests.swift; sourceTree = "<group>"; };
 		96F4AD451D22D3B9004524EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		96F4AD511D22D678004524EC /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		96F4AD531D22D69A004524EC /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +107,8 @@
 				96F4AD2A1D22D3B9004524EC /* Assets.xcassets */,
 				96F4AD2C1D22D3B9004524EC /* LaunchScreen.storyboard */,
 				96F4AD2F1D22D3B9004524EC /* Info.plist */,
+				96F4AD511D22D678004524EC /* Constants.swift */,
+				96F4AD531D22D69A004524EC /* GCDBlackBox.swift */,
 			);
 			path = ImageRequest;
 			sourceTree = "<group>";
@@ -256,8 +262,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96F4AD541D22D69A004524EC /* GCDBlackBox.swift in Sources */,
 				96F4AD261D22D3B9004524EC /* ViewController.swift in Sources */,
 				96F4AD241D22D3B9004524EC /* AppDelegate.swift in Sources */,
+				96F4AD521D22D678004524EC /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
