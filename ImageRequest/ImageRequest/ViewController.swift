@@ -25,6 +25,8 @@ class ViewController: UIViewController {
                 performUIUpdatesOnMain { self.imageView.image = downloadedImage }
             }
         }.resume()
+        //dispatch_queue_create(UnsafePointer<Int8>, dispatch_queue_attr_t!)
+        //DISPATCH_QUEUE_SERIAL
         
     }
 
