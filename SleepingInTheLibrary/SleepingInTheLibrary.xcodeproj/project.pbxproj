@@ -14,6 +14,7 @@
 		96699F321D2578A600EB3B93 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96699F301D2578A600EB3B93 /* LaunchScreen.storyboard */; };
 		96699F3D1D2578A600EB3B93 /* SleepingInTheLibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96699F3C1D2578A600EB3B93 /* SleepingInTheLibraryTests.swift */; };
 		96699F481D2578A600EB3B93 /* SleepingInTheLibraryUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96699F471D2578A600EB3B93 /* SleepingInTheLibraryUITests.swift */; };
+		96699F561D257BDE00EB3B93 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96699F551D257BDE00EB3B93 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		96699F431D2578A600EB3B93 /* SleepingInTheLibraryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SleepingInTheLibraryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		96699F471D2578A600EB3B93 /* SleepingInTheLibraryUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepingInTheLibraryUITests.swift; sourceTree = "<group>"; };
 		96699F491D2578A600EB3B93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		96699F551D257BDE00EB3B93 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			children = (
 				96699F271D2578A600EB3B93 /* AppDelegate.swift */,
 				96699F291D2578A600EB3B93 /* ViewController.swift */,
+				96699F551D257BDE00EB3B93 /* Constants.swift */,
 				96699F2B1D2578A600EB3B93 /* Main.storyboard */,
 				96699F2E1D2578A600EB3B93 /* Assets.xcassets */,
 				96699F301D2578A600EB3B93 /* LaunchScreen.storyboard */,
@@ -258,6 +261,7 @@
 			files = (
 				96699F2A1D2578A600EB3B93 /* ViewController.swift in Sources */,
 				96699F281D2578A600EB3B93 /* AppDelegate.swift in Sources */,
+				96699F561D257BDE00EB3B93 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

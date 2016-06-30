@@ -10,16 +10,44 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+    @IBOutlet weak var photoImageView: UIImageView!
+    @IBOutlet weak var photoTitleLabel: UILabel!
+    @IBOutlet weak var grabImageButton: UIButton!
+    
+    @IBAction func grabNewImage(sender: AnyObject) {
+        setUIEnabled(false)
+        getImageFromFlickr()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    // MARK: - Configure UI
+    
+    private func setUIEnabled(enabled:Bool) {
+        photoTitleLabel.enabled = enabled
+        grabImageButton.enabled = enabled
+        
+        if enabled {
+            grabImageButton.alpha = 1.0
+        } else {
+            grabImageButton.alpha = 0.5
+        }
+    }
+    
+    // MARK: - Network Requests
+    
+    private func getImageFromFlickr() {
+        
     }
 
 
 }
+
+/*
+ 
+ 
+ func performUIUpdatesOnMain(updates: () -> Void) {
+ dispatch_async(dispatch_get_main_queue()) {
+ updates()
+ }
+ }
+ */
 
