@@ -33,6 +33,20 @@ func parseJSONAsDictionary(dictionary: NSDictionary) {
     }
     print("Count by objects: \(photoArray.count)")
     print("Count by kvp: \(total)")
+    
+    for (index, photo) in photoArray.enumerate()  {
+        guard let photo = photo as? [String: AnyObject],
+        let comment = photo["comment"] as? [String: AnyObject],
+        let content = comment["_content"] as? String
+        else {
+            break
+        }
+        if content.containsString("interrufftion") {
+            print("index of \(index) has 'interufftion'")
+        }
+    }
+    
+    
 }
 
 parseJSONAsDictionary(parsedAnimalsJSON)
