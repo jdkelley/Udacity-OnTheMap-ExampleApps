@@ -39,7 +39,7 @@ class ViewController: UIViewController {
         let methodParameters = [
             FlickrClient.Parameter.Key.Method           : FlickrClient.Parameter.Value.GalleryPhotosMethod,
             FlickrClient.Parameter.Key.APIKey           : FlickrClient.Parameter.Value.APIKey,
-            FlickrClient.Parameter.Key.GalleryID        : FlickrClient.Parameter.Value.GalleryID,
+            FlickrClient.Parameter.Key.GalleryID        : FlickrClient.Parameter.Value.ForcedPerspectivesGalleryID, //FlickrClient.Parameter.Value.GalleryID,
             FlickrClient.Parameter.Key.Extras           : FlickrClient.Parameter.Value.MediumURL,
             FlickrClient.Parameter.Key.Format           : FlickrClient.Parameter.Value.ResponseFormat,
             FlickrClient.Parameter.Key.NoJSONCallback   : FlickrClient.Parameter.Value.DisableJSONCallback

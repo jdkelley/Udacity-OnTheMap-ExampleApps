@@ -29,6 +29,7 @@ class FlickrClient {
                 static let DisableJSONCallback = "1" // 1 -> "yes"
                 static let GalleryPhotosMethod = "flickr.galleries.getPhotos"
                 static let GalleryID = "5704-72157622566655097"
+                static let ForcedPerspectivesGalleryID = "66911286-72157647263150569"
                 static let MediumURL = "url_m"
             }
         }
