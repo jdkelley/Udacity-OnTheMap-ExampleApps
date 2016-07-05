@@ -61,41 +61,67 @@ class ViewController: UIViewController {
                 }
             }
             
-            if error == nil {
-                if let data = data {
-                    let parsedResult: AnyObject!
-                    do {
-                        parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-                    } catch {
-                        displayError("Could not parse the data as JSON: '\(data)'")
-                        return
-                    }
-                    
-                    if let photosDictionary = parsedResult[FlickrClient.Response.Key.Photos] as? [String: AnyObject], photoArray = photosDictionary[FlickrClient.Response.Key.Photo] as? [[String:AnyObject]] {
-                        print(photoArray[0])
-                        
-                        // generate random index
-                        let index = Int(arc4random_uniform(UInt32(photoArray.count)))
-                        let photoDictionary = photoArray[index] as [String: AnyObject]
-                        
-                        if let imageUrlString = photoDictionary[FlickrClient.Response.Key.MediumURL] as? String, let photoTitle = photoDictionary[FlickrClient.Response.Key.Title] as? String {
-                            print(imageUrlString)
-                            print(photoTitle)
-                            let imageURL = NSURL(string: imageUrlString)
-                            if let imageData = NSData(contentsOfURL: imageURL!) {
-                                performUIUpdatesOnMain {
-                                    self.photoImageView.image = UIImage(data: imageData)
-                                    self.photoTitleLabel.text = photoTitle
-                                    self.setUIEnabled(true)
-                                }
-                            }
-                        }
-                    }
-                    
-                    
-                    //print(parsedResult)
-                }
-                
+            guard error == nil else {
+                displayError("There was an error with your request: \(error)")
+                return
+            }
+            
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode
+                where statusCode >= 200 && statusCode < 300 else {
+                    displayError("Your request returned a status code other than 2xx!")
+                    return
+            }
+            
+            guard let data = data else {
+                displayError("No Data was returned by the request.")
+                return
+            }
+
+            
+            let parsedResult: AnyObject!
+            do {
+                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            } catch {
+                displayError("Could not parse the data as JSON: '\(data)'")
+                return
+            }
+            
+            guard let stat = parsedResult[FlickrClient.Response.Key.Status]
+                as? String where stat == FlickrClient.Response.Value.OKStatus
+                else {
+                    displayError("Flickr API returned an error. See error code and message in \(parsedResult)")
+                    return
+            }
+            
+            guard let photosDictionary = parsedResult[FlickrClient.Response.Key.Photos] as? [String: AnyObject],
+                        photoArray = photosDictionary[FlickrClient.Response.Key.Photo] as? [[String:AnyObject]]  else {
+                displayError("Cannot find keys '\(FlickrClient.Response.Key.Photos)' and '\(FlickrClient.Response.Key.Photo)' in \(parsedResult)")
+                return
+            }
+            print(photoArray[0])
+            
+            // generate random index
+            let index = Int(arc4random_uniform(UInt32(photoArray.count)))
+            let photoDictionary = photoArray[index] as [String: AnyObject]
+            
+            guard   let imageUrlString = photoDictionary[FlickrClient.Response.Key.MediumURL] as? String,
+                    let photoTitle = photoDictionary[FlickrClient.Response.Key.Title] as? String else {
+                displayError("Cannot find key '\(FlickrClient.Response.Key.Title)' in \(photoDictionary)")
+                return
+            }
+            
+            print(imageUrlString)
+            print(photoTitle)
+            let imageURL = NSURL(string: imageUrlString)
+            guard let imageData = NSData(contentsOfURL: imageURL!) else {
+                displayError("Error Downloading image data from \(imageURL!)")
+                return
+            }
+            
+            performUIUpdatesOnMain {
+                self.photoImageView.image = UIImage(data: imageData)
+                self.photoTitleLabel.text = photoTitle
+                self.setUIEnabled(true)
             }
         }.resume()
     }
