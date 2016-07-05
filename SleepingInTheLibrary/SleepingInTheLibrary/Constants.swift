@@ -11,7 +11,7 @@ class FlickrClient {
     
     
     
-    struct API {
+    //struct API {
         static let BaseURL : String = "https://api.flickr.com/services/rest"
         
         struct Parameter {
@@ -46,5 +46,5 @@ class FlickrClient {
                 static let OKStatus = "ok"
             }
         }
-    }
+//    }
 }
