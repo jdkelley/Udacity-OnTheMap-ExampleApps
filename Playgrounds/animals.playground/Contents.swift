@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Udacity. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 /* Path for JSON files bundled with the Playground */
 var pathForAnimalsJSON = NSBundle.mainBundle().pathForResource("animals", ofType: "json")
@@ -45,6 +45,16 @@ func parseJSONAsDictionary(dictionary: NSDictionary) {
             print("index of \(index) has 'interufftion'")
         }
     }
+    
+    guard let imagePhoto = photoArray[2] as? [String: AnyObject],
+        let imageURL = imagePhoto["url_m"] as? String,
+        let URL = NSURL(string: imageURL),
+        let data = NSData(contentsOfURL: URL) else {
+        return
+    }
+    
+    let image = UIImage(data: data)
+    
     
     
 }
