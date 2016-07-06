@@ -94,3 +94,40 @@ func parseJSONAsDictionary(dictionary: NSDictionary) {
 }
 
 parseJSONAsDictionary(parsedHearthstoneJSON)
+
+struct Solution {
+    
+    /**
+    Hearthstone Solution
+    You can find the solution playground in the Playgrounds directory of the course repository. Here are some highlights of things we did to solve the problems:
+    
+    Creating Dictionaries with Key Values from an Array
+    
+    Since one of the questions requires us to calculate values based on card rarity, we used an array of known rarity keys to elegantly store calculations into dictionaries:
+    
+    let rarities = ["Free", "Common"]
+    
+    // initialization...
+    for rarity in rarities {
+    numCostForRarityItemsDictionary[rarity] = 0
+    sumCostForRarityDictionary[rarity] = 0
+    }
+    Then, later in the code when we parse a card's rarity, we can easily add it to our running totals:
+    
+    guard let rarityForCard = cardDictionary["rarity"] as? String else {
+    print("Cannot find key 'rarityForCard' in \(cardDictionary)")
+    return
+    }
+    
+    numCostForRarityItemsDictionary[rarityForCard]! += 1
+    sumCostForRarityDictionary[rarityForCard]! += manaCost
+    Creating an Array of Dictionaries
+    
+    Like in the previous exercise, we can use one line to create the array of dictionaries (card dictionaries) as seen in the JSON:
+    
+    guard let arrayOfBasicSetCardDictionaries = parsedHearthstoneJSON["Basic"] as? [[String:AnyObject]] else {
+    print("Cannot find key 'Basic' in \(parsedHearthstoneJSON)")
+    return
+    } */
+    
+}
