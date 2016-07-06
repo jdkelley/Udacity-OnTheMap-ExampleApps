@@ -93,3 +93,62 @@ func parseJSONAsDictionary(dictionary: NSDictionary) {
 }
 
 parseJSONAsDictionary(parsedAchievementsJSON)
+
+struct Solution {
+    /**
+     
+     Achievements Solution
+     You can find the solution playground in the Playgrounds directory of the course repository. Here are some highlights of things we did to solve the problems:
+     
+     Created Array and Dictionary to Determine Achievements in a Category
+     
+     One of the questions required us to determine the number of achievements belonging to the "Matchmaking" category. Since the "Matchmaking" category contains several children categories, we use an array to store the categoryIds:
+     
+     /* Create array to hold the categoryIds for "Matchmaking" categories */
+     var matchmakingIds: [Int] = []
+     
+     /* Store all "Matchmaking" categories */
+     for categoryDictionary in categoryDictionaries {
+     
+     if let title = categoryDictionary["title"] as? String where title == "Matchmaking" {
+     
+     guard let children = categoryDictionary["children"] as? [NSDictionary] else {
+     print("Cannot find key 'children' in \(categoryDictionary)")
+     return
+     }
+     
+     for child in children {
+     guard let categoryId = child["categoryId"] as? Int else {
+     print("Cannot find key 'categoryId' in \(child)")
+     return
+     }
+     matchmakingIds.append(categoryId)
+     }
+     }
+     }
+     Later, when browsing through achievements, we use a dictionary to count the number of achievements for all categoryIds:
+     
+     /* Create dictionary to store the counts for "Matchmaking" categories */
+     var categoryCounts: [Int: Int] = [:]
+     
+     for achievementDictionary in achievementDictionaries {
+     
+     /* Add to category counts */
+     guard let categoryId = achievementDictionary["categoryId"] as? Int else {
+     print("Cannot find key 'categoryId' in \(achievementDictionary)")
+     return
+     }
+     
+     /* Does category have a key in dictionary? If not, initialize */
+     if categoryCounts[categoryId] == nil {
+     categoryCounts[categoryId] = 0
+     }
+     
+     /* Add one to category count */
+     if let currentCount = categoryCounts[categoryId] {
+     categoryCounts[categoryId] = currentCount + 1
+     }
+     }
+     
+    */
+}
