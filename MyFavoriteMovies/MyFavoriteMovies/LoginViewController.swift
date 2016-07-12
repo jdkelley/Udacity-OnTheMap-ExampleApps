@@ -104,27 +104,26 @@ class LoginViewController: UIViewController {
         let task = appDelegate.sharedSession.dataTaskWithRequest(request) { (data, response, error) in
             
             func displayError(error: String) {
+                print("Login failed: (\(self.authStep))")
                 print(error)
-                //print("URL at the time of error \(url)")
                 performUIUpdatesOnMain {
                     self.setUIEnabled(true)
-                    self.debugTextLabel.text = "Login failed (\(self.authStep))"
+                    self.debugTextLabel.text = "Login failed: (\(self.authStep))"
                 }
-                
             }
             
             guard error == nil else {
-                displayError("(\(self.authStep) : There was an error with your request: \(error)")
+                displayError("There was an error with your request: \(error)")
                 return
             }
             
             guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode < 300 else {
-                displayError("(\(self.authStep) : Your request returned something other than 2XX")
+                displayError("Your request returned something other than 2XX")
                 return
             }
             
             guard let data = data else {
-                displayError("(\(self.authStep) : No data was return from your request.")
+                displayError("No data was return from your request.")
                 return
             }
             
@@ -132,18 +131,18 @@ class LoginViewController: UIViewController {
             do {
                 parsedJSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
             } catch {
-                displayError("(\(self.authStep) : Could not parse Data: \(data)")
+                displayError("Could not parse Data: \(data)")
                 return
             }
             
             guard   let body = parsedJSON as? [String: AnyObject],
                     let success = body[Constants.TMDBResponseKeys.Success] as? Bool where success else {
-                displayError("(\(self.authStep) : Your request was no successful but returned: \(parsedJSON)")
+                displayError("(Your request was no successful but returned: \(parsedJSON)")
                 return
             }
             
             guard let requestToken = body[Constants.TMDBResponseKeys.RequestToken] as? String else {
-                displayError("(\(self.authStep) : No request token was returned from your request. Returned Data: \(body)")
+                displayError("No request token was returned from your request. Returned Data: \(body)")
                 return
             }
             print(requestToken)
@@ -163,7 +162,69 @@ class LoginViewController: UIViewController {
         
         authStep = "Login With Token"
         
+        func displayError(error: String) {
+            print("Login failed: (\(self.authStep))")
+            print(error)
+            performUIUpdatesOnMain {
+                self.setUIEnabled(true)
+                self.debugTextLabel.text = "Login failed: (\(self.authStep))"
+            }
+        }
+
+        guard   let _usrname = usernameTextField.text,
+                let _pswd = passwordTextField.text else {
+                displayError("The Username or Password fields are empty")
+                return
+        }
         
+        let methodParameters = [
+            Constants.TMDBParameterKeys.ApiKey : Constants.TMDBParameterValues.ApiKey,
+            Constants.TMDBParameterKeys.RequestToken : requestToken,
+            Constants.TMDBParameterKeys.Password : _pswd,
+            Constants.TMDBParameterKeys.Username : _usrname
+        ]
+        
+        let request = NSURLRequest(URL: appDelegate.tmdbURLFromParameters(methodParameters, withPathExtension: "/authentication/token/validate_with_login"))
+        
+        _ = appDelegate.sharedSession.dataTaskWithRequest(request) { (data, response, error) in
+            
+            guard error == nil else {
+                displayError("There was an error with your request: \(error)")
+                return
+            }
+            
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode < 300 else {
+                displayError("Your request returned something other than 2xx!")
+                return
+            }
+            
+            guard let data = data else {
+                displayError("No Data was returned from your request!")
+                return
+            }
+            
+            let parsedJSON: AnyObject!
+            do {
+                parsedJSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            } catch {
+                displayError("Could not parse returned data to JSON: \(data)")
+                return
+            }
+            
+            guard   let body = parsedJSON as? [String : AnyObject],
+                    let success = body[Constants.TMDBResponseKeys.Success] as? Bool where success else {
+                displayError("Your request was not successful!")
+                return
+            }
+            
+            guard let returnedRequestToken = body[Constants.TMDBResponseKeys.RequestToken] as? String else {
+                displayError("Could not find request token in returned data: \(body)")
+                return
+            }
+            print("Login Completed: \(returnedRequestToken)")
+            
+            
+        }.resume()
         
         /* TASK: Login, then get a session id */
         
