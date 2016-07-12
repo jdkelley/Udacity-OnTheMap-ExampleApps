@@ -17,6 +17,8 @@ class LoginViewController: UIViewController {
     var appDelegate: AppDelegate!
     var keyboardOnScreen = false
     
+    var authStep = "Request Token"
+    
     // MARK: Outlets
     
     @IBOutlet weak var usernameTextField: UITextField!
@@ -88,6 +90,8 @@ class LoginViewController: UIViewController {
         
         /* TASK: Get a request token, then store it (appDelegate.requestToken) and login with the token */
         
+        authStep = "Request Token"
+        
         /* 1. Set the parameters */
         let methodParameters = [
             Constants.TMDBParameterKeys.ApiKey: Constants.TMDBParameterValues.ApiKey
@@ -99,6 +103,54 @@ class LoginViewController: UIViewController {
         /* 4. Make the request */
         let task = appDelegate.sharedSession.dataTaskWithRequest(request) { (data, response, error) in
             
+            func displayError(error: String) {
+                print(error)
+                //print("URL at the time of error \(url)")
+                performUIUpdatesOnMain {
+                    self.setUIEnabled(true)
+                    self.debugTextLabel.text = "Login failed (\(self.authStep))"
+                }
+                
+            }
+            
+            guard error == nil else {
+                displayError("(\(self.authStep) : There was an error with your request: \(error)")
+                return
+            }
+            
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode < 300 else {
+                displayError("(\(self.authStep) : Your request returned something other than 2XX")
+                return
+            }
+            
+            guard let data = data else {
+                displayError("(\(self.authStep) : No data was return from your request.")
+                return
+            }
+            
+            let parsedJSON: AnyObject!
+            do {
+                parsedJSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            } catch {
+                displayError("(\(self.authStep) : Could not parse Data: \(data)")
+                return
+            }
+            
+            guard   let body = parsedJSON as? [String: AnyObject],
+                    let success = body[Constants.TMDBResponseKeys.Success] as? Bool where success else {
+                displayError("(\(self.authStep) : Your request was no successful but returned: \(parsedJSON)")
+                return
+            }
+            
+            guard let requestToken = body[Constants.TMDBResponseKeys.RequestToken] as? String else {
+                displayError("(\(self.authStep) : No request token was returned from your request. Returned Data: \(body)")
+                return
+            }
+            print(requestToken)
+            
+            self.appDelegate.requestToken = requestToken
+            self.loginWithToken(requestToken)
+            
             /* 5. Parse the data */
             /* 6. Use the data! */
         }
@@ -108,6 +160,10 @@ class LoginViewController: UIViewController {
     }
     
     private func loginWithToken(requestToken: String) {
+        
+        authStep = "Login With Token"
+        
+        
         
         /* TASK: Login, then get a session id */
         
