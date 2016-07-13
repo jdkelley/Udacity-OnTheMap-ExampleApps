@@ -172,7 +172,62 @@ class MovieDetailViewController: UIViewController {
     
     @IBAction func toggleFavorite(sender: AnyObject) {
         
-        // let shouldFavorite = !isFavorite
+        let shouldFavorite = !isFavorite
+        
+        let methodParameters = [
+            Constants.TMDBParameterKeys.ApiKey      :   Constants.TMDBParameterValues.ApiKey,
+            Constants.TMDBParameterKeys.SessionID   :   appDelegate.sessionID!
+        ]
+        
+        let request = NSMutableURLRequest(URL: appDelegate.tmdbURLFromParameters(methodParameters, withPathExtension: "/account/\(appDelegate.userID)/favorite"))
+        
+        request.HTTPMethod = Constants.HTTP.PostMethod
+        request.addValue(Constants.HTTP.HeaderValue.ApplicationJson, forHTTPHeaderField: Constants.HTTP.HeaderKey.Accept)
+        request.addValue(Constants.HTTP.HeaderValue.ApplicationJson, forHTTPHeaderField: Constants.HTTP.HeaderKey.ContentType)
+        
+        print("Body to send: " + "{\n    \"media_type\": \"movie\",\n    \"media_id\": \(movie!.id),\n    \"favorite\": \(shouldFavorite)\n}")
+        
+        request.HTTPBody = "{\n    \"media_type\": \"movie\",\n    \"media_id\": \(movie!.id),\n    \"favorite\": \(shouldFavorite)\n}".dataUsingEncoding(NSUTF8StringEncoding)
+        
+        _ = appDelegate.sharedSession.dataTaskWithRequest(request) { (data, response, error) in
+            func displayError(error: String) {
+                print("Network Request Failed: (Toggle Item as Favorite)")
+                print(error)
+            }
+            
+            guard error == nil else {
+                displayError("There was an error with your request: \(error)")
+                return
+            }
+            
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode < 300 else {
+                displayError("Your request returned something other than an 2xx statusCodeS")
+                return
+            }
+            
+            guard let data = data else {
+                displayError("No data was returned with your request!")
+                return
+            }
+            
+            var parsedJSON: AnyObject!
+            do {
+                parsedJSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            } catch {
+                displayError("Unable to parse returned data as JSON: \(data)")
+                return
+            }
+            
+            guard   let body = parsedJSON as? [String: AnyObject],
+            let status = body[Constants.TMDBResponseKeys.StatusCode] as? Int where shouldFavorite ? (status == 1 || status == 12) : (status == 13) else {
+                        displayError("Toggling the favorite of this movie (\(self.movie!.id)) was unsuccesful!")
+                        return
+            }
+            self.isFavorite = shouldFavorite
+            performUIUpdatesOnMain {
+                self.favoriteButton.tintColor = (shouldFavorite) ? nil : UIColor.blackColor()
+            }
+        }.resume()
         
         /* TASK: Add movie as favorite, then update favorite buttons */
         /* 1. Set the parameters */
@@ -182,12 +237,10 @@ class MovieDetailViewController: UIViewController {
         /* 6. Use the data! */
         /* 7. Start the request */
         
-        /* If the favorite/unfavorite request completes, then use this code to update the UI...
+        /// If the favorite/unfavorite request completes, then use this code to update the UI...
         
-        performUIUpdatesOnMain {
-            self.favoriteButton.tintColor = (shouldFavorite) ? nil : UIColor.blackColor()
-        }
         
-        */
+        
+        
     }
 }

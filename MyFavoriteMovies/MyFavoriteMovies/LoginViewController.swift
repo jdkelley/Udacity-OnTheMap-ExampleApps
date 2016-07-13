@@ -309,6 +309,60 @@ class LoginViewController: UIViewController {
         
         authStep = "Get User ID"
         
+        let methodParameters = [
+            Constants.TMDBParameterKeys.ApiKey      :   Constants.TMDBParameterValues.ApiKey,
+            Constants.TMDBParameterKeys.SessionID   :   sessionID
+        ]
+        
+        let request = NSURLRequest(URL: appDelegate.tmdbURLFromParameters(methodParameters, withPathExtension: "/account"))
+        
+        _ = appDelegate.sharedSession.dataTaskWithRequest(request) { (data, response, error) in
+            
+            func displayError(error: String) {
+                print("Login Failed: \(self.authStep)")
+                print(error)
+                performUIUpdatesOnMain {
+                    self.setUIEnabled(true)
+                    self.debugTextLabel.text = "Login Failed: \(self.authStep)"
+                }
+            }
+            
+            guard error == nil else {
+                displayError("There was an error with your request: \(error)")
+                return
+            }
+            
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode < 300 else {
+                displayError("Your request returned something other than a 2xx statusCode!")
+                return
+            }
+            
+            guard let data = data else {
+                displayError("No data was returned from your request!")
+                return
+            }
+            
+            var parsedJSON: AnyObject!
+            do {
+                parsedJSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            } catch {
+                displayError("Unable to parse returned data into JSON: \(data)")
+                return
+            }
+            
+            guard   let body = parsedJSON as? [String: AnyObject],
+                    let id = body[Constants.TMDBResponseKeys.ID] as? Int else {
+                    displayError("Could not parse id from returned JSON: \(parsedJSON)")
+                    return
+            }
+            print(body)
+            self.appDelegate.userID = id
+            print(id)
+            self.completeLogin()
+            
+        }.resume()
+            
+        
         /* TASK: Get the user's ID, then store it (appDelegate.userID) for future use and go to next view! */
         
         /* 1. Set the parameters */

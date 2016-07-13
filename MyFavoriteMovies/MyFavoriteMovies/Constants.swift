@@ -12,6 +12,17 @@ import UIKit
 
 struct Constants {
     
+    struct HTTP {
+        static let PostMethod = "POST"
+        struct HeaderKey {
+            static let Accept = "Accept"
+            static let ContentType = "Content-Type"
+        }
+        struct HeaderValue {
+            static let ApplicationJson = "application/json"
+        }
+    }
+    
     // MARK: TMDB
     struct TMDB {
         static let ApiScheme = "https"
