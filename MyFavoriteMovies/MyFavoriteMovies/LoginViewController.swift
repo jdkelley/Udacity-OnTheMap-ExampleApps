@@ -291,10 +291,10 @@ class LoginViewController: UIViewController {
                 return
             }
             self.appDelegate.sessionID = sessionID
-            print("returned sessionID is \(sessionID)")
+            self.getUserID(sessionID)
         
             
-        }
+        }.resume()
         /* TASK: Get a session ID, then store it (appDelegate.sessionID) and get the user's id */
         
         /* 1. Set the parameters */
@@ -306,6 +306,8 @@ class LoginViewController: UIViewController {
     }
     
     private func getUserID(sessionID: String) {
+        
+        authStep = "Get User ID"
         
         /* TASK: Get the user's ID, then store it (appDelegate.userID) for future use and go to next view! */
         
