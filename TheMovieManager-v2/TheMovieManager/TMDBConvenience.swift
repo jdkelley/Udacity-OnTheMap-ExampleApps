@@ -192,9 +192,12 @@ extension TMDBClient {
             TMDBClient.ParameterKeys.SessionID : sessionID!
         ]
         
+        var mutableMethod: String = Methods.AccountIDWatchlistMovies
+        mutableMethod = subtituteKeyInMethod(mutableMethod, key: URLKeys.UserID, value: String(TMDBClient.sharedInstance().userID!))!
+        
         /* 2. Make the request */
         
-        taskForGETMethod(TMDBClient.Methods.AccountIDWatchlistMovies, parameters: parameters) { (result, error) in
+        taskForGETMethod(mutableMethod, parameters: parameters) { (result, error) in
             /* 3. Send the desired value(s) to completion handler */
             if let error = error {
                 completionHandlerForWatchlist(result: nil, error: error)
@@ -283,15 +286,28 @@ extension TMDBClient {
     func postToWatchlist(movie: TMDBMovie, watchlist: Bool, completionHandlerForWatchlist: (result: Int?, error: NSError?) -> Void) {
         
         /* 1. Specify parameters, the API method, and the HTTP body (if POST) */
+        let parameters = [
+            ParameterKeys.SessionID : TMDBClient.sharedInstance().sessionID!
+        ]
+        
+        var mutableMethod: String = Methods.AccountIDWatchlist
+        mutableMethod = subtituteKeyInMethod(mutableMethod, key: URLKeys.UserID, value: String(TMDBClient.sharedInstance().userID!))!
+        let jsonBody = "{\"\(JSONBodyKeys.MediaType)\" : \"movie\",\"\(JSONBodyKeys.MediaID)\" : \(movie.id),\"\(JSONBodyKeys.Watchlist)\" : \(true)}"
+        
         /* 2. Make the request */
-        /* 3. Send the desired value(s) to completion handler */
         
-        /*
-        
-        taskForPOSTMethod(method, parameters: parameters, jsonBody: jsonBody) { (result, error) in
-        
+        taskForPOSTMethod(mutableMethod, parameters: parameters, jsonBody: jsonBody) { (result, error) in
+            if let error = error {
+                completionHandlerForWatchlist(result: nil, error: error)
+            } else {
+                if let results = result[JSONResponseKeys.StatusCode] as? Int where results == 1 {
+                    completionHandlerForWatchlist(result: results, error: nil)
+                } else {
+                    completionHandlerForWatchlist(result: nil, error: NSError(domain: "postToWatchlist parsing", code: 0, userInfo: [NSLocalizedDescriptionKey : "Could not parse postToFavoritesList"]))
+                }
+            }
         }
-        
-        */
+        /* 3. Send the desired value(s) to completion handler */
+
     }
 }
