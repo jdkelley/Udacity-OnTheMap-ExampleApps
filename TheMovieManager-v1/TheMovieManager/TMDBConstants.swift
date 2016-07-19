@@ -43,6 +43,8 @@ extension TMDBClient {
         // MARK: Config
         static let Config = "/configuration"
         
+        static let Allow = "/allow"
+        
     }
 
     // MARK: URL Keys

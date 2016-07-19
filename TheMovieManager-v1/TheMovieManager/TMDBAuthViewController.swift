@@ -36,6 +36,10 @@ class TMDBAuthViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        auth()
+    }
+    
+    func auth() {
         if let urlRequest = urlRequest {
             webView.loadRequest(urlRequest)
         }
@@ -52,5 +56,15 @@ class TMDBAuthViewController: UIViewController {
 
 extension TMDBAuthViewController: UIWebViewDelegate {
     
-    // TODO: Add implementation here
+    func webViewDidFinishLoad(webView: UIWebView) {
+        if webView.request?.URL!.absoluteString == "\(TMDBClient.Constants.AuthorizationURL)\(requestToken!)\(TMDBClient.Methods.Allow)" {
+            print("Authorized")
+            dismissViewControllerAnimated(true) {
+                self.completionHandlerForView?(success: true, errorString: nil)
+            }
+        }
+        if webView.request!.URL!.absoluteString.containsString("https://www.themoviedb.org/account/") {
+            auth()
+        }
+    }
 }
