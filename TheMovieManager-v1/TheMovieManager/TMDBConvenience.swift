@@ -152,6 +152,28 @@ extension TMDBClient {
         }
         
         */
+        
+        guard let token = requestToken else {
+            completionHandlerForSession(success: false, sessionID: nil, errorString: "Login Failed (Get Session ID)")
+            return
+        }
+        
+        let parameters = [
+            TMDBClient.ParameterKeys.RequestToken : token
+        ]
+        
+        taskForGETMethod(TMDBClient.Methods.AuthenticationSessionNew, parameters: parameters) { (result, error) in
+            if let error = error {
+                print(error)
+                completionHandlerForSession(success: false, sessionID: nil, errorString: "Login Failed (Get Session ID)")
+            } else {
+                if let sessionID = result[TMDBClient.JSONResponseKeys.SessionID] as? String {
+                    completionHandlerForSession(success: true, sessionID: sessionID, errorString: nil)
+                } else {
+                    completionHandlerForSession(success: false, sessionID: nil, errorString: "Login Failed (Get Session ID)")
+                }
+            }
+        }
     }
     
     private func getUserID(completionHandlerForUserID: (success: Bool, userID: Int?, errorString: String?) -> Void) {
@@ -167,6 +189,28 @@ extension TMDBClient {
         }
         
         */
+        
+        guard let session = sessionID else {
+            completionHandlerForUserID(success: false, userID: nil, errorString: "Login Failed (User ID)")
+            return
+        }
+        
+        let parameters = [
+            TMDBClient.ParameterKeys.SessionID : session
+        ]
+        
+        taskForGETMethod(TMDBClient.Methods.Account, parameters: parameters) { (result, error) in
+            if let error = error {
+                print(error)
+                completionHandlerForUserID(success: false, userID: nil, errorString: "Login Failed (User ID)")
+            } else {
+                if let id = result[TMDBClient.JSONResponseKeys.UserID] as? Int {
+                    completionHandlerForUserID(success: true, userID: id, errorString: nil)
+                } else {
+                    completionHandlerForUserID(success: false, userID: nil, errorString: "Login Failed (User ID)")
+                }
+            }
+        }
     }
     
     // MARK: GET Convenience Methods
